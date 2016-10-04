@@ -70,14 +70,6 @@ q_model = colorHistogram(original_feature_matrix, bins, center_x, center_y, h);
 
 x = center_x;
 y = center_y;
-imagesc(img1/255);
-hold on;
-plot(x, y, 'yellow+', 'MarkerSize', 5);
-hold off;
-pause;
-close all;
-imagesc(img2/255);
-hold on;
 coordinates = [x y];
 for n=1:number_of_iterations
     feature_matrix = circularNeighbors(img2, x, y, radius);
@@ -88,8 +80,14 @@ for n=1:number_of_iterations
     x = new_coordinate(1);
     y = new_coordinate(2);
     coordinates = [coordinates; new_coordinate];
-    plot(x, y, 'yellow+', 'MarkerSize', 5);
-    title(sprintf('Distance between last 2 points: %0.5g', sqrt( (coordinates(end, 1) - coordinates(end-1, 1)).^2 +(coordinates(end, 2) - coordinates(end-1, 2)).^2 )));
-    pause(1);
 end
+imagesc(img1/255);
+hold on;
+plot(x, y, 'yellow+', 'MarkerSize', 5);
+hold off;
+pause;
+imagesc(img2/255);
+hold on;
+plot(coordinates(end, 1), coordinates(end, 2), 'yellow+', 'MarkerSize', 5);
+title(sprintf('Distance between last 2 points: %0.5g', sqrt( (coordinates(end, 1) - coordinates(end-1, 1)).^2 +(coordinates(end, 2) - coordinates(end-1, 2)).^2 )));
 hold off;
