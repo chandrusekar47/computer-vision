@@ -15,6 +15,7 @@ function [feature_matrix] = circularNeighbors(img, center_x, center_y, radius)
     num_cols = num_cols - ((center_x + radius) - bottom_right_x);
     num_rows = num_rows - ((center_y + radius) - bottom_right_y);
     % center inside the meshgrid
+    % relative to 1-numcols, 1-numrows
     relative_center_x = center_x - top_left_x + 1;
     relative_center_y = center_y - top_left_y + 1;
     [X, Y] = meshgrid(1:num_cols, 1:num_rows);
@@ -24,6 +25,8 @@ function [feature_matrix] = circularNeighbors(img, center_x, center_y, radius)
     % for all pixels in the bounding box
     bounding_box_feature_matrix = generate_feature_matrix(img, top_left_x, top_left_y, num_cols, num_rows);
     transposed_circle_points = circle_points';
+    % change size of circle_points to Kx5 to match the dimensions of the
+    % bounding box feature matrix.
     vectorized_circle_points = repmat(transposed_circle_points(:), 1, 5);
     % zero out all entries in the bounding_box_feature_matrix where the point is not
     % in circle

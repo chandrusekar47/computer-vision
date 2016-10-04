@@ -15,15 +15,19 @@ function [hist] = colorHistogram(feature_matrix, bins, center_x, center_y, h)
     end
     % sort the feature matrix by X followed by Y coordinate
     sorted_feature_matrix = sortrows(feature_matrix, [1 2]);
-    
+    % remove x,y points in the kernel but not in the feature matrix
     filtered_kernel = kernel_vectors(ismember(kernel_vectors(:, 1:2), sorted_feature_matrix(:, 1:2), 'rows'), :);
+    % remove x,y points in the feature_matrix but not in the kernel
     filtered_feature_matrix = sorted_feature_matrix(ismember(sorted_feature_matrix(:, 1:2), filtered_kernel(:, 1:2), 'rows'), :);
+    % filtered_kernel and filtered_feature_matrix have the same X Y points
+    % in the same order in the array.
     weighted_hist_vector(:, 1) = floor(filtered_feature_matrix(:, 3)/bins) + 1;
     weighted_hist_vector(:, 2) = floor(filtered_feature_matrix(:, 4)/bins) + 1;
-    weighted_hist_vector(:, 3) = floor(filtered_feature_matrix(:, 4)/bins) + 1;
+    weighted_hist_vector(:, 3) = floor(filtered_feature_matrix(:, 5)/bins) + 1;
     weighted_hist_vector(:, 4) = filtered_kernel(:, 3);
     
     % iterative way to create the hist cube
+    % hist_cube = zeros(bins, bins, bins);
     % for n=1:size(weighted_hist_vector, 1)
     %     rbin = weighted_hist_vector(n, 1);
     %     gbin = weighted_hist_vector(n, 2);
@@ -43,5 +47,6 @@ function [hist] = colorHistogram(feature_matrix, bins, center_x, center_y, h)
     cubes_indices_present = ismember(all_cube_indices(:, 1:3), summed_hist_vector(:, 1:3), 'rows');
     all_cube_indices(cubes_indices_present, 4) = summed_hist_vector(:, 4);
     hist_cube = reshape(all_cube_indices(:, 4), bins, bins, bins);
+    
     hist = hist_cube ./ sum(sum(sum(hist_cube,3),2),1);
 end

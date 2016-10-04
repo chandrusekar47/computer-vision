@@ -1,6 +1,6 @@
 % Problem 1
 close all;clc;clear;
-img = double(imread('input\target.jpg'));
+img = double(imread(fullfile('input','target.jpg')));
 [height, width, ~] = size(img);
 model_cov_matrix = [47.917 0 -146.636 -141.572 -123.269; 0 408.250 68.487 69.828 53.479; -146.636 68.487 2654.285 2621.672 2440.381; -141.572 69.828 2621.672 2597.818 2435.368; -123.269 53.479 2440.381 2435.368 2404.923];
 patch_rows = 70;
@@ -17,16 +17,17 @@ for x=1:last_col
     end
 end
 [row, col] = find_element(cov_diff_mat, min(cov_diff_mat(:)));
-figure;imagesc(cov_diff_mat);colormap('gray');
+figure;imagesc(cov_diff_mat);
 figure;imagesc(img/255);
 hold on;
 rectangle('Position', [col row patch_cols patch_rows], 'EdgeColor', 'yellow', 'LineWidth', 3);
 hold off;
+figure;surf(cov_diff_mat);axis('ij');
 pause;
 
 % Problem 2
 clc; close all;
-img = double(imread('input\target.jpg'));
+img = double(imread(fullfile('input','target.jpg')));
 center_x = 275;
 center_y = 25;
 radius = 20;
@@ -57,8 +58,8 @@ weights = meanShiftWeights(feature_matrix, q_model, p_test);
 
 % Problem 5
 clc; clear; close all;
-img1 = double(imread('input\img1.jpg'));
-img2 = double(imread('input\img2.jpg'));
+img1 = double(imread(fullfile('input','img1.jpg')));
+img2 = double(imread(fullfile('input','img2.jpg')));
 radius = 25;
 h = 25;
 center_x = 150.0;
@@ -67,7 +68,11 @@ bins = 16;
 number_of_iterations = 25;
 original_feature_matrix = circularNeighbors(img1, center_x, center_y, radius);
 q_model = colorHistogram(original_feature_matrix, bins, center_x, center_y, h);
-
+figure;imagesc(img1/255);
+hold on;
+viscircles([center_x center_y], [radius]);
+plot(center_x, center_y, 'y+', 'MarkerSize', 5);
+hold off;
 x = center_x;
 y = center_y;
 coordinates = [x y];
@@ -79,15 +84,17 @@ for n=1:number_of_iterations
     new_coordinate = sum([feature_matrix(:, 1) .* weights', feature_matrix(:, 2) .* weights'], 1) ./ sum_of_weights;
     x = new_coordinate(1);
     y = new_coordinate(2);
-    coordinates = [coordinates; new_coordinate];
+    coordinates = [coordinates; x y];
+    fprintf('New coordinate: (%g, %g)\n', x, y);
 end
-imagesc(img1/255);
-hold on;
-plot(x, y, 'yellow+', 'MarkerSize', 5);
-hold off;
-pause;
-imagesc(img2/255);
-hold on;
-plot(coordinates(end, 1), coordinates(end, 2), 'yellow+', 'MarkerSize', 5);
-title(sprintf('Distance between last 2 points: %0.5g', sqrt( (coordinates(end, 1) - coordinates(end-1, 1)).^2 +(coordinates(end, 2) - coordinates(end-1, 2)).^2 )));
-hold off;
+for n=1:size(coordinates, 1)
+    imagesc(img2/255);
+    hold on;
+    viscircles([coordinates(n, 1) coordinates(n, 2)], radius);
+    plot(coordinates(n, 1), coordinates(n, 2), 'yellow+', 'MarkerSize', 5);
+    if n > 1 
+        title(sprintf('Iteration: %d, Distance between last 2 points: %0.5g \n Point: (%g, %g)', n, sqrt( (coordinates(n, 1) - coordinates(n-1, 1)).^2 +(coordinates(n, 2) - coordinates(n-1, 2)).^2 ), coordinates(n ,1), coordinates(n, 2)));
+    end
+    hold off;
+    pause(1);
+end
