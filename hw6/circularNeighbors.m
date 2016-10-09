@@ -2,18 +2,18 @@ function [feature_matrix] = circularNeighbors(img, center_x, center_y, radius)
     num_cols = 2*radius;
     num_rows = 2*radius;
     [height, width, ~] = size(img);
-    top_left_x = max(1, center_x - radius);
-    top_left_y = max(1, center_y - radius);
-    % handle scenario when the distance between center of the image and the
-    % left/top edge is less than radius
-    num_cols = num_cols - (top_left_x-(center_x - radius));
-    num_rows = num_rows - (top_left_y-(center_y - radius));
-    % handle scenario when the distance between center of the image and the
-    % right/bottom edge is less than radius
-    bottom_right_x = min(width, top_left_x + num_cols);
-    bottom_right_y = min(height, top_left_y + num_rows);
-    num_cols = num_cols - ((center_x + radius) - bottom_right_x);
-    num_rows = num_rows - ((center_y + radius) - bottom_right_y);
+    top_left_x = floor(center_x - radius);
+    top_left_y = floor(center_y - radius);
+%     % handle scenario when the distance between center of the image and the
+%     % left/top edge is less than radius
+%     num_cols = num_cols - (top_left_x-(center_x - radius));
+%     num_rows = num_rows - (top_left_y-(center_y - radius));
+%     % handle scenario when the distance between center of the image and the
+%     % right/bottom edge is less than radius
+    bottom_right_x = top_left_x + num_cols;
+    bottom_right_y = top_left_y + num_rows;
+%     num_cols = num_cols - ((center_x + radius) - bottom_right_x);
+%     num_rows = num_rows - ((center_y + radius) - bottom_right_y);
     % center inside the meshgrid
     % relative to 1-numcols, 1-numrows
     relative_center_x = center_x - top_left_x + 1;

@@ -87,14 +87,19 @@ for n=1:number_of_iterations
     coordinates = [coordinates; x y];
     fprintf('New coordinate: (%g, %g)\n', x, y);
 end
-for n=1:size(coordinates, 1)
+imagesc(img2/255);
+hold on;
+viscircles([coordinates(1, 1) coordinates(1, 2)], radius);
+plot(coordinates(1, 1), coordinates(1, 2), 'yellow+', 'MarkerSize', 5);
+title(sprintf('Iteration: 1, Point: (%g, %g)', coordinates(1 ,1), coordinates(1, 2)));
+hold off;
+pause;
+for n=2:size(coordinates, 1)
     imagesc(img2/255);
     hold on;
     viscircles([coordinates(n, 1) coordinates(n, 2)], radius);
     plot(coordinates(n, 1), coordinates(n, 2), 'yellow+', 'MarkerSize', 5);
-    if n > 1 
-        title(sprintf('Iteration: %d, Distance between last 2 points: %0.5g \n Point: (%g, %g)', n, sqrt( (coordinates(n, 1) - coordinates(n-1, 1)).^2 +(coordinates(n, 2) - coordinates(n-1, 2)).^2 ), coordinates(n ,1), coordinates(n, 2)));
-    end
+    title(sprintf('Iteration: %d, Distance between last 2 points: %0.5g \n Point: (%g, %g)', n, sqrt( (coordinates(n, 1) - coordinates(n-1, 1)).^2 +(coordinates(n, 2) - coordinates(n-1, 2)).^2 ), coordinates(n ,1), coordinates(n, 2)));
     hold off;
-    pause(1);
+    pause(2);
 end
