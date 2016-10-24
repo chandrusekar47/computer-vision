@@ -21,9 +21,9 @@ function [hist] = colorHistogram(feature_matrix, bins, center_x, center_y, h)
     filtered_feature_matrix = sorted_feature_matrix(ismember(sorted_feature_matrix(:, 1:2), filtered_kernel(:, 1:2), 'rows'), :);
     % filtered_kernel and filtered_feature_matrix have the same X Y points
     % in the same order in the array.
-    weighted_hist_vector(:, 1) = floor(filtered_feature_matrix(:, 3)/bins) + 1;
-    weighted_hist_vector(:, 2) = floor(filtered_feature_matrix(:, 4)/bins) + 1;
-    weighted_hist_vector(:, 3) = floor(filtered_feature_matrix(:, 5)/bins) + 1;
+    weighted_hist_vector(:, 1) = floor(filtered_feature_matrix(:, 3)*bins/256) + 1;
+    weighted_hist_vector(:, 2) = floor(filtered_feature_matrix(:, 4)*bins/256) + 1;
+    weighted_hist_vector(:, 3) = floor(filtered_feature_matrix(:, 5)*bins/256) + 1;
     weighted_hist_vector(:, 4) = filtered_kernel(:, 3);
     
     % iterative way to create the hist cube

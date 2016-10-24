@@ -1,17 +1,17 @@
 % function [] = scratchpad () 
 clear; clc; close all;
-number_of_images=30;
+number_of_images=117;
 width = 640;
 height= 480;
 all_images = zeros(height, width, 3, number_of_images);
-center_x  = 195;
-center_y = 435;
+center_x  = 280;
+center_y = 208;
 radius = 30;
 h = 30;
 bins = 16;
 all_image_positions = zeros(number_of_images, 2);
 for n=1:number_of_images
-    all_images(:, :, :, n) = double(imread(sprintf('input\\juggle\\juggle\\img (%d).jpg', n)));
+    all_images(:, :, :, n) = double(imread(sprintf('input\\juggle\\img (%d).jpg', n)));
 end
 
 number_of_iterations = 25;
@@ -31,7 +31,6 @@ for m=2:number_of_images
         x = new_coordinate(1);
         y = new_coordinate(2);
     end
-    q_model = p_test;
     fprintf('Image %d Coordinates: (%g, %g)\n', m, x, y);
     all_image_positions(m, :) = [x y];
 end
@@ -44,5 +43,5 @@ for n=1:number_of_images
     plot(all_image_positions(n, 1), all_image_positions(n, 2), 'yellow+', 'MarkerSize', 5);
     viscircles(all_image_positions(n, :), [radius]);
     hold off;
-    pause(1);
+    pause(0.5);
 end
